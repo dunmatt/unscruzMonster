@@ -2,32 +2,34 @@
 
 import os
 
-import board
+# import board
 # import digitalio
 # import pyftdi
 from pyftdi.ftdi import Ftdi
 
 
 def main():
-    # ftdi://[vendor][:[product][:serial|:bus:address|:index]]/interface
-    # something = Ftdi().open_from_url("ftdi:///?")
-    # print(dir(Ftdi()))
-    # print(Ftdi().open_from_url("ftdi:///?").device_version())
-    # print(os.environ["BLINKA_FT232H"])
+    # something = Ftdi.create_from_url("ftdi://0x0403:0x6014:MT0000/1")
     something = Ftdi()
-    something.open_from_url("ftdi://0x0403:0x6014:MT0000/1")
-    # something.open_from_url("ftdi://0x0403:0x6014/1")
-    print(dir(something))
-    something_else = Ftdi()
-    something_else.open_from_url("ftdi://0x0403:0x6014:MB0000/1")
-    print(something_else)
+    something.open_mpsse(0x0403, 0x6014, serial="MT0000", frequency=400_000)
+    # TODO: enable MPSSE mode before uncommenting this line
+    # something.set_frequency(400_000)
+    something.enable_3phase_clock(True)
+    print(something)
+    # print(something.get_identifiers())
+    print(dir(something.usb_dev))
+    print((something.usb_dev.serial_number))
+    print((something.usb_dev.product))
+    print((something.usb_dev.manufacturer))
+
 
     # everything = Ftdi.find_all([(0x0403, 0x6014)])
     # for thing in everything:
-    #     print(thing)
     #     thing = thing[0]
+    #     print(thing)
     #     print(dir(thing))
-    #     print(thing.bitbang_enabled)
+    #     print(thing.sn)
+    # #     print(thing.bitbang_enabled)
 
 if __name__ == '__main__':
     main()
